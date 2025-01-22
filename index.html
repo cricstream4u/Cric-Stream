@@ -3,16 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/x-icon" href="Cric stream Favicon.jpg">
-    <title>TG-@cric_stream</title>
+    <title>Token Test Player</title>
     <style>
-        body {
-            margin: 0px;
-            padding-top: 5px;
-            font-family: Arial, sans-serif;
-            width: 100%;
-        }
-
         #jwplayerDiv {
             width: 100%;
             height: 100%;
@@ -23,16 +15,11 @@
 <body>
     <div id="jwplayerDiv"></div>
     <script>
-        // DASH stream URL
         const dashStreamUrl = "https://d1yws6emo43ny.cloudfront.net/CH5/masterCH5.mpd";
-
-        // Bearer token for authorization
         const bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3bXZlciI6Miwid21pZGZtdCI6ImFzY2lpIiwid21pZHR5cCI6MSwid21rZXl2ZXIiOjEsIndtaWRsZW4iOjUxMiwid21pZCI6Ik9HWmpaRFJpWm1VdE9ESTROQzAwWWpFeExUa3lPVFl0TldRME1UZ3dNakF4TmpFeiIsIndtb3BpZCI6MzIsImV4cCI6MTczODAzOTc0MCwiaWF0IjoxNzM3NDM1NzQwfQ.LbTU4ibYQSip1nQiN2poRSN5iqcMVCHHA5tV2C36uKU";
 
-        // Initialize JW Player
         const playerInstance = jwplayer("jwplayerDiv");
 
-        // Configure the player for DASH playback and add Bearer Token
         playerInstance.setup({
             file: dashStreamUrl,
             width: "100%",
@@ -40,20 +27,25 @@
             aspectratio: "16:9",
             autostart: true,
             mute: false,
-            type: "dash", // Ensures DASH compatibility
+            type: "dash",
             preload: "auto",
             cast: {
                 appid: "CC1AD845"
             },
+            // Attach Authorization Header to all requests
             xhrSetup: function(xhr) {
-                xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
+                xhr.setRequestHeader("Authorization", `Bearer ${bearerToken}`);
+                console.log("Authorization header attached.");
             }
         });
 
-        // Handle player errors gracefully
-        playerInstance.on('error', function(error) {
-            console.error("Error loading stream:", error.message);
-            alert("Failed to load the stream. Please check the URL and token, and try again.");
+        playerInstance.on("error", function(error) {
+            console.error("Player Error:", error.message);
+            alert("Failed to load the stream. Please check the token or stream URL.");
+        });
+
+        playerInstance.on("ready", function() {
+            console.log("Player is ready.");
         });
     </script>
 </body>
