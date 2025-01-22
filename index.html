@@ -1,187 +1,174 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<title>Player -  | </title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="stylesheet" type="text/css" href="static/clap.css?v=1"/>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@clappr/hlsjs-playback@1.0.1/dist/hlsjs-playback.min.js"></script>
-<script src="https://cdn.jsdelivr.net/clappr.level-selector/latest/level-selector.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="icon" href=""/>
-<link rel="shortcut icon" href=""/>
- <!-- Hacker Style -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="Cric stream Favicon.jpg">
+    <title>TG-@cric_stream</title>
     <style>
+        /* Your existing styles remain the same */
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            overflow: hidden;
-            background-color: #000; /* Black background */
-            font-family: 'Courier New', Courier, monospace; /* Monospace font for hacker look */
-            color: #FF6C00; 
+            margin: 0px;
+            padding-top: 5px;
+            font-family: Arial, sans-serif;
+            width: 100%
         }
 
-        #player-wrapper {
-            height: 100%;
+        #jwplayerDiv {
             width: 100%;
-            position: relative;
+            height: 100%;
         }
 
-        #counter {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,108,0, 0.1); 
-            color: #FF6C00; 
-            padding: 4px 8px;
-            border: 1px solid #FF6C00; 
-            border-radius: 5px;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-        }
-
-        #counter .eye-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 20px;
-            height: 20px;
-            margin-right: 6px;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite ease-in-out;
-        }
-
-        #counter .eye-icon {
-            font-size: 14px;
-            color: #FF6C00; 
-        }
-
-        .live-text {
-            font-weight: bold;
-            color: #FF6C00; 
-            animation: flash 1.5s infinite;
-            margin-right: 8px;
-        }
-
-        #counter span {
-            font-size: 14px;
-            color: #FF6C00; 
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.2); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes flash {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .unmute-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 2px;
-            background-color: #FF6C00; 
-            color: #fff; /* Black text */
-            border: 2px solid #FF6C00; 
-            border-radius: 5px;
-            font-size: 12px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(255,108,0, 0.3); 
-            transition: background 0.3s, transform 0.3s;
-            z-index: 1000;
-        }
-
-        .unmute-button:hover {
-            background-color: #000; /* Black background on hover */
-            color: #FF6C00; 
-            transform: scale(1.05); /* Slightly larger on hover */
-        }
-
-        .unmute-button:focus {
-            outline: none; /* Remove default focus outline */
-        }
-
+        /* Popup styles */
         .popup {
-            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255,108,0, 0.1); 
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s ease;
-        }
-
-        .popup-content {
-            background-color: #000000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1c1c1c;
+            border-radius: 20px;
             padding: 20px;
-            width: 75%;
-            max-width: 300px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(255,108,0, 0.2);
             text-align: center;
-            position: relative;
-            animation: fadeIn 0.3s ease-out;
-            border: 2px solid #FF6C00;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
+            z-index: 1002;
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 0.5s;
         }
 
-        .close-btn {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: #FF6C00;
-            color: #000;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
+        .popup h2 {
+            color: #ffcc00;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .popup p {
+            margin-bottom: 20px;
+            color: #ccc;
             font-size: 16px;
-            width: 25px;
-            height: 25px;
-            line-height: 25px;
         }
 
-        .join-btn {
-            display: inline-block;
-            padding: 10px 15px;
-            margin-top: 10px;
-            background-color: #000;
-            color: #FF6C00;
-            text-decoration: none;
-            border: 2px solid #FF6C00; 
+        .popup button {
+            background-color: #0088cc;
+            color: #fff;
+            border: none;
+            padding: 10px;
             border-radius: 5px;
-            font-size: 14px;
-            text-transform: uppercase;
-            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .popup button:hover {
+            background-color: #006699;
+        }
+
+        .popup .close-btn {
+            background-color: #555;
+        }
+
+        .popup .close-btn:hover {
+            background-color: #333;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
+    <script src="https://cdn.jwplayer.com/libraries/SAHhwvZq.js"></script>
 </head>
 <body>
-    <iframe 
-    src="blob:https://bdixtv24.site/3110eb80-79cc-4b9c-bb50-187791a1362c" 
-    width="800" 
-    height="450" 
-    frameborder="0" 
-    allow="autoplay; encrypted-media" 
-    allowfullscreen>
-</iframe>
+    <div id="jwplayerDiv"></div>
+    <script>
+        // Function to get URL query parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
 
+        // Retrieve the 'file' and 'token' parameters from the URL
+        const hlsStreamUrl = getQueryParam("file");
+        const bearerToken = getQueryParam("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3bXZlciI6Miwid21pZGZtdCI6ImFzY2lpIiwid21pZHR5cCI6MSwid21rZXl2ZXIiOjEsIndtaWRsZW4iOjUxMiwid21pZCI6Ik9HWmpaRFJpWm1VdE9ESTROQzAwWWpFeExUa3lPVFl0TldRME1UZ3dNakF4TmpFeiIsIndtb3BpZCI6MzIsImV4cCI6MTczODAzOTc0MCwiaWF0IjoxNzM3NDM1NzQwfQ.LbTU4ibYQSip1nQiN2poRSN5iqcMVCHHA5tV2C36uKU"); // Example: ?file=...&token=YOUR_BEARER_TOKEN
+
+        if (!hlsStreamUrl || !bearerToken) {
+            alert("Missing HLS stream URL or Bearer token. Please add 'file' and 'token' parameters to the URL.");
+        } else {
+            // Initialize JW Player
+            const playerInstance = jwplayer("jwplayerDiv");
+
+            // Configure the player with the HLS stream and Bearer token
+            playerInstance.setup({
+                file: hlsStreamUrl,
+                width: "100%",
+                height: "100%",
+                aspectratio: "16:9",
+                autostart: true,
+                mute: false,
+                type: "hls", // Ensures HLS compatibility
+                preload: "auto",
+                cast: {
+                    appid: "CC1AD845"
+                },
+                advertising: {}, // If using ads, configure here
+                xhrSetup: function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
+                }
+            });
+
+            // Optional: Handle player errors gracefully
+            playerInstance.on('error', function(error) {
+                console.error("Error loading stream:", error.message);
+                alert("Failed to load the stream. Please check the URL and token, and try again.");
+            });
+        }
+    </script>
+
+    <!-- Additional Popup and Footer Code Remains the Same -->
+    <script>
+        // Restrict iframe embedding
+        if (window.top !== window.self) {
+            window.addEventListener('DOMContentLoaded', function() {
+                document.body.innerHTML = '<div id="message"></div>';
+            });
+        }
+
+        // Display a modern pop-up message when the page starts
+        window.addEventListener("load", function() {
+            var popup = document.createElement("div");
+            popup.className = "popup";
+            popup.innerHTML = `
+              <h2>Support Us!</h2>
+              <p>Join our Telegram channel <br>Cric_Stream official for more updates.</p>
+              <button id="joinButton">Join Now</button>
+              <button id="closeButton" class="close-btn">Already Joined</button>
+            `;
+            document.body.appendChild(popup);
+            document.getElementById("joinButton").addEventListener("click", function() {
+                window.location.href = "https://t.me/cric_stream";
+            });
+            document.getElementById("closeButton").addEventListener("click", function() {
+                document.body.removeChild(popup);
+            });
+        });
+    </script>
+
+    <center>
+        <script type="text/javascript" src="//widget.supercounters.com/ssl/online_t.js"></script>
+        <script type="text/javascript">sc_online_t(1703448, "Watching....", "#1d1d21");</script>
+        <br>
+        <noscript><a href="https://www.supercounters.com/"></a></noscript>
+    </center>
+
+    <div style="background-color: #0074d9; text-align: center; padding: 10px;">
+        <a href="https://t.me/cric_stream" target="_blank">
+            <button id="joinTelegramButton">Join Telegram</button>
+        </a>
+    </div>
 </body>
 </html>
