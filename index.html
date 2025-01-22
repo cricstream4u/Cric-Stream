@@ -6,79 +6,16 @@
     <link rel="shortcut icon" type="image/x-icon" href="Cric stream Favicon.jpg">
     <title>TG-@cric_stream</title>
     <style>
-        /* Your existing styles remain the same */
         body {
             margin: 0px;
             padding-top: 5px;
             font-family: Arial, sans-serif;
-            width: 100%
+            width: 100%;
         }
 
         #jwplayerDiv {
             width: 100%;
             height: 100%;
-        }
-
-        /* Popup styles */
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #1c1c1c;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-            z-index: 1002;
-            width: 90%;
-            max-width: 400px;
-            animation: fadeIn 0.5s;
-        }
-
-        .popup h2 {
-            color: #ffcc00;
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-
-        .popup p {
-            margin-bottom: 20px;
-            color: #ccc;
-            font-size: 16px;
-        }
-
-        .popup button {
-            background-color: #0088cc;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        .popup button:hover {
-            background-color: #006699;
-        }
-
-        .popup .close-btn {
-            background-color: #555;
-        }
-
-        .popup .close-btn:hover {
-            background-color: #333;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
         }
     </style>
     <script src="https://cdn.jwplayer.com/libraries/SAHhwvZq.js"></script>
@@ -86,89 +23,38 @@
 <body>
     <div id="jwplayerDiv"></div>
     <script>
-        // Function to get URL query parameters
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+        // DASH stream URL
+        const dashStreamUrl = "https://d1yws6emo43ny.cloudfront.net/CH5/masterCH5.mpd";
 
-        // Retrieve the 'file' and 'token' parameters from the URL
-        const hlsStreamUrl = getQueryParam("file");
-        const bearerToken = getQueryParam("Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3bXZlciI6Miwid21pZGZtdCI6ImFzY2lpIiwid21pZHR5cCI6MSwid21rZXl2ZXIiOjEsIndtaWRsZW4iOjUxMiwid21pZCI6Ik9HWmpaRFJpWm1VdE9ESTROQzAwWWpFeExUa3lPVFl0TldRME1UZ3dNakF4TmpFeiIsIndtb3BpZCI6MzIsImV4cCI6MTczODAzOTc0MCwiaWF0IjoxNzM3NDM1NzQwfQ.LbTU4ibYQSip1nQiN2poRSN5iqcMVCHHA5tV2C36uKU"); // Example: ?file=...&token=YOUR_BEARER_TOKEN
+        // Bearer token for authorization
+        const bearerToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3bXZlciI6Miwid21pZGZtdCI6ImFzY2lpIiwid21pZHR5cCI6MSwid21rZXl2ZXIiOjEsIndtaWRsZW4iOjUxMiwid21pZCI6Ik9HWmpaRFJpWm1VdE9ESTROQzAwWWpFeExUa3lPVFl0TldRME1UZ3dNakF4TmpFeiIsIndtb3BpZCI6MzIsImV4cCI6MTczODAzOTc0MCwiaWF0IjoxNzM3NDM1NzQwfQ.LbTU4ibYQSip1nQiN2poRSN5iqcMVCHHA5tV2C36uKU";
 
-        if (!hlsStreamUrl || !bearerToken) {
-            alert("Missing HLS stream URL or Bearer token. Please add 'file' and 'token' parameters to the URL.");
-        } else {
-            // Initialize JW Player
-            const playerInstance = jwplayer("jwplayerDiv");
+        // Initialize JW Player
+        const playerInstance = jwplayer("jwplayerDiv");
 
-            // Configure the player with the HLS stream and Bearer token
-            playerInstance.setup({
-                file: hlsStreamUrl,
-                width: "100%",
-                height: "100%",
-                aspectratio: "16:9",
-                autostart: true,
-                mute: false,
-                type: "hls", // Ensures HLS compatibility
-                preload: "auto",
-                cast: {
-                    appid: "CC1AD845"
-                },
-                advertising: {}, // If using ads, configure here
-                xhrSetup: function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
-                }
-            });
+        // Configure the player for DASH playback and add Bearer Token
+        playerInstance.setup({
+            file: dashStreamUrl,
+            width: "100%",
+            height: "100%",
+            aspectratio: "16:9",
+            autostart: true,
+            mute: false,
+            type: "dash", // Ensures DASH compatibility
+            preload: "auto",
+            cast: {
+                appid: "CC1AD845"
+            },
+            xhrSetup: function(xhr) {
+                xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
+            }
+        });
 
-            // Optional: Handle player errors gracefully
-            playerInstance.on('error', function(error) {
-                console.error("Error loading stream:", error.message);
-                alert("Failed to load the stream. Please check the URL and token, and try again.");
-            });
-        }
-    </script>
-
-    <!-- Additional Popup and Footer Code Remains the Same -->
-    <script>
-        // Restrict iframe embedding
-        if (window.top !== window.self) {
-            window.addEventListener('DOMContentLoaded', function() {
-                document.body.innerHTML = '<div id="message"></div>';
-            });
-        }
-
-        // Display a modern pop-up message when the page starts
-        window.addEventListener("load", function() {
-            var popup = document.createElement("div");
-            popup.className = "popup";
-            popup.innerHTML = `
-              <h2>Support Us!</h2>
-              <p>Join our Telegram channel <br>Cric_Stream official for more updates.</p>
-              <button id="joinButton">Join Now</button>
-              <button id="closeButton" class="close-btn">Already Joined</button>
-            `;
-            document.body.appendChild(popup);
-            document.getElementById("joinButton").addEventListener("click", function() {
-                window.location.href = "https://t.me/cric_stream";
-            });
-            document.getElementById("closeButton").addEventListener("click", function() {
-                document.body.removeChild(popup);
-            });
+        // Handle player errors gracefully
+        playerInstance.on('error', function(error) {
+            console.error("Error loading stream:", error.message);
+            alert("Failed to load the stream. Please check the URL and token, and try again.");
         });
     </script>
-
-    <center>
-        <script type="text/javascript" src="//widget.supercounters.com/ssl/online_t.js"></script>
-        <script type="text/javascript">sc_online_t(1703448, "Watching....", "#1d1d21");</script>
-        <br>
-        <noscript><a href="https://www.supercounters.com/"></a></noscript>
-    </center>
-
-    <div style="background-color: #0074d9; text-align: center; padding: 10px;">
-        <a href="https://t.me/cric_stream" target="_blank">
-            <button id="joinTelegramButton">Join Telegram</button>
-        </a>
-    </div>
 </body>
 </html>
