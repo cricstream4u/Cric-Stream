@@ -3,80 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/x-icon" href="Cric stream Favicon.jpg">
-    <title>TG-@cric_stream</title>
+    <title>JWPlayer Dash Auto-Detect</title>
     <style>
         body {
-            margin: 0px;
-            padding-top: 5px;
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            width: 100%;
+            height: 100vh;
+            overflow: hidden;
         }
 
         #jwplayerDiv {
             width: 100%;
-            height: 100%;
-        }
-
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #1c1c1c;
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-            z-index: 1002;
-            width: 90%;
-            max-width: 400px;
-            animation: fadeIn 0.5s;
-        }
-
-        .popup h2 {
-            color: #ffcc00;
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-
-        .popup p {
-            margin-bottom: 20px;
-            color: #ccc;
-            font-size: 16px;
-        }
-
-        .popup button {
-            background-color: #0088cc;
-            color: #fff;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        .popup button:hover {
-            background-color: #006699;
-        }
-
-        .popup .close-btn {
-            background-color: #555;
-        }
-
-        .popup .close-btn:hover {
-            background-color: #333;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            height: 100vh;
         }
     </style>
     <script src="https://cdn.jwplayer.com/libraries/SAHhwvZq.js"></script>
@@ -84,72 +23,27 @@
 <body>
     <div id="jwplayerDiv"></div>
     <script>
-        // Initialize JW Player with the static .m3u8 link
-        const playerInstance = jwplayer("jwplayerDiv");
+        // Link to the DASH manifest (can omit the .mpd extension)
+        const streamUrl = "https://vkvsd63.okcdn.ru/cmaf/7858144873004/sig/1qmTAHb2cRY/expires/1737897285177/srcIp/92.62.121.180/urls/185.226.53.53/clientType/13/srcAg/CHROME/mid/9244487396140/get/dash_9244487396140.QvNZAiTWaso.mpd";
 
+        // Initialize JWPlayer
+        const playerInstance = jwplayer("jwplayerDiv");
         playerInstance.setup({
-            file: "http://85.217.177.16:8080/live/dprF3dxn/L4hpGs31nJ/34949.m3u8?token=GERbBEdfEAhGUAUNUVIHXAdTVlwDAQwPClAHAgoFCVEBAwYGAlFQAlUXGRZEQ0QAUVtsUAEQAgoMW1EOHxRNFQYUbAxQFQgQUAwEDRUbFBFZW1YbXwIUG0gLARUJFAlSWlALVQMVHhABTUFRRVlXCW9SVk8MUV0bAgwQW18aGgkNOVcAWVZcVkYPFwUVGxQMQ0YRAwtHVFUUQAdeR0RZEgZECUcGDgQDRhkXV1hCWBFCTxEDR3t2GxRAAE9HU1YVCgldRw4VXwERDRcYFV5FOkJTQE0XV1lUXRBHDREGGkpBC1Ida1RdXApQVkBeWFgWEgwRCEceGlRXDAxDXERnFgoCEV8WBgYLUgcFDBVK",
+            file: streamUrl,
             width: "100%",
             height: "100%",
             aspectratio: "16:9",
             autostart: true,
-            mute: false,
-            type: "hls",
             preload: "auto",
-            cast: {
-                appid: "CC1AD845"
-            }
+            mute: false,
+            type: "dash", // Specify DASH playback explicitly
         });
 
-        // Optional: Handle player errors gracefully
+        // Handle errors gracefully
         playerInstance.on('error', function(error) {
-            console.error("Error loading stream:", error.message);
-            alert("Failed to load the stream. Please check the link and try again.");
-        });
-
-        // Restrict iframe embedding
-        if (window.top !== window.self) {
-            window.addEventListener('DOMContentLoaded', function() {
-                document.body.innerHTML = '<div id="message"></div>';
-            });
-        }
-
-        // Display a modern pop-up message when the page starts
-        window.addEventListener("load", function() {
-            var popup = document.createElement("div");
-            popup.className = "popup";
-
-            popup.innerHTML = `
-              <h2>Support Us!</h2>
-              <p>Join our Telegram channel <br>Cric_Stream official for more updates.</p>
-              <button id="joinButton">Join Now</button>
-              <button id="closeButton" class="close-btn">Already Joined</button>
-            `;
-
-            document.body.appendChild(popup);
-
-            document.getElementById("joinButton").addEventListener("click", function() {
-                window.location.href = "https://t.me/cric_stream";
-            });
-
-            document.getElementById("closeButton").addEventListener("click", function() {
-                document.body.removeChild(popup);
-            });
+            console.error("Error loading DASH stream:", error.message);
+            alert("Failed to load the stream. Please check the link or try again later.");
         });
     </script>
-
-    <center>
-        <script type="text/javascript" src="//widget.supercounters.com/ssl/online_t.js"></script>
-        <script type="text/javascript">sc_online_t(1703448, "Watching....", "#1d1d21");</script>
-        <br>
-        <noscript><a href="https://www.supercounters.com/"></a></noscript>
-    </center>
-
-    <div style="background-color: #0074d9; text-align: center; padding: 10px;">
-        <a href="https://t.me/cric_stream" target="_blank">
-            <button id="joinTelegramButton">Join Telegram</button>
-        </a>
-    </div>
 </body>
 </html>
-
